@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "108537719126",
+    "project_id": "heyya-44603",
+    "storage_bucket": "heyya-44603.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108537719126:android:9404cc9f20c165a504cef7",
+        "android_client_info": {
+          "package_name": "com.example.heyya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108537719126-fl7gm8to474k8nmha6fkb01ebsmeh52r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.heyya",
+            "certificate_hash": "e96492b5367a5494501bad82e4aea081cdeea42d"
+          }
+        },
+        {
+          "client_id": "108537719126-effbvpfgir5q7lrgrgijopm0dte38s7u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfMHNBvddH2fh8Ja2gL3O96xn9rLhhepM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108537719126-effbvpfgir5q7lrgrgijopm0dte38s7u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
