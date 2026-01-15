@@ -22,24 +22,27 @@ class ChatRepositoryImpl(
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // This maps the Firebase data to your ChatUser model automatically
                 val users = snapshot.children.mapNotNull { doc ->
-                    doc.getValue(ChatUser::class.java)
+                    try {
+                        if(doc.value is Map<*, *>) {
+                            doc.getValue(ChatUser::class.java)
+                        } else {
+                            null
+                        }
+                    } catch (_: Exception) {
+                        null
+                    }
                 }.sortedByDescending { it.lastMessageTimestamp }
                 trySend(users)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // If there's an error (like no internet), we close the flow
                 close(error.toException())
             }
         }
 
-        // Start listening
         recentChatsRef.addValueEventListener(listener)
 
-        // IMPORTANT: This removes the listener when the user leaves the screen
-        // to prevent memory leaks and unnecessary data usage.
         awaitClose { recentChatsRef.removeEventListener(listener) }
     }
 }

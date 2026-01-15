@@ -15,7 +15,6 @@ import com.example.heyya.features.auth.domain.useCases.GetCurrentUserUseCase
 
 class AuthViewModel : ViewModel() {
 
-    // Ideally, you inject this with Hilt, but for now we create it here
     private val repository = AuthRepositoryImpl(
         auth = FirebaseModules.auth,
         database = FirebaseModules.database
@@ -33,7 +32,6 @@ class AuthViewModel : ViewModel() {
         _isAuthenticated.value = currentUser != null
     }
 
-    // State to tell UI what to show
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
 

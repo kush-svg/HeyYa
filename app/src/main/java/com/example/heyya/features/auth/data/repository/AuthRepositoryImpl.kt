@@ -41,14 +41,11 @@ class AuthRepositoryImpl(
             val credential = result.credential
 
             val idToken = when {
-                // Case 1: Direct cast (Standard)
                 credential is GoogleIdTokenCredential -> {
                     credential.idToken
                 }
-                // Case 2: CustomCredential wrapper (Common in newer Android versions)
                 credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL -> {
                     try {
-                        // Manually extract the token from the data bundle
                         GoogleIdTokenCredential.createFrom(credential.data).idToken
                     } catch (e: Exception) {
                         android.util.Log.e("AuthRepo", "Failed to extract Google ID token", e)
@@ -80,7 +77,6 @@ class AuthRepositoryImpl(
                 // If idToken is still null, it means the type was truly unexpected
                 Result.Error("Unexpected credential type: ${credential.type}")
             }
-            // --- REFINED LOGIC ENDS HERE ---
 
         } catch (e: Exception) {
             Result.Error(e.message ?: "Authentication failed")

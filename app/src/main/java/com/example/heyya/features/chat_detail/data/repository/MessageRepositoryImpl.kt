@@ -27,18 +27,28 @@ class MessageRepositoryImpl(
             val senderId = message.senderId
             val receiverId = message.receiverId
 
-            val chatUpdate = mapOf(
-                "id" to "",
+            val senderChatUpdate = mapOf(
+                "uid" to receiverId,
+                "name" to message.receiverName,
                 "lastMessage" to message.text,
-                "lastMessageTimestamp" to message.timestamp
+                "lastMessageTimestamp" to message.timestamp,
+                "profilePic" to ""
+            )
+
+            val receiverChatUpdate = mapOf(
+                "uid" to senderId,
+                "name" to message.senderName, // Make sure Message model has senderName
+                "lastMessage" to message.text,
+                "lastMessageTimestamp" to message.timestamp,
+                "profilePic" to ""
             )
 
             db.reference.child("recent_chats").child(senderId).child(receiverId)
-                .updateChildren(chatUpdate + mapOf("id" to receiverId, "name" to message.receiverName))
+                .updateChildren(senderChatUpdate)
                 .await()
 
             db.reference.child("recent_chats").child(receiverId).child(senderId)
-                .updateChildren(chatUpdate + mapOf("id" to senderId, "name" to message.senderName))
+                .updateChildren(receiverChatUpdate)
                 .await()
 
             Result.Success(true) // Use Capital S for your custom class
@@ -53,7 +63,16 @@ class MessageRepositoryImpl(
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val messages = snapshot.children.mapNotNull { doc ->
-                    doc.getValue(Message::class.java)
+                    try {
+                        // Safety check: only attempt to parse if it's an object (Map)
+                        if (doc.value is Map<*, *>) {
+                            doc.getValue(Message::class.java)
+                        } else {
+                            null
+                        }
+                    } catch (_: Exception) {
+                        null
+                    }
                 }
                 trySend(messages)
             }

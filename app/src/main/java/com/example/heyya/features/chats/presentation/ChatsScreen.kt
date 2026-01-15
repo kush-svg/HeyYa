@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState // Required for collectAsState
@@ -23,7 +26,8 @@ import coil.compose.AsyncImage
 @Composable
 fun ChatsScreen(
     viewModel: ChatViewModel = viewModel(factory = ChatViewModel.Factory),
-    onNavigateToChatDetail: (id: String, name: String) -> Unit
+    onNavigateToChatDetail: (id: String, name: String) -> Unit,
+    onNavigateToSearch: () -> Unit
 ) {
 
     val users by viewModel.users.collectAsState()
@@ -36,7 +40,19 @@ fun ChatsScreen(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             )
-        }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    onNavigateToSearch()
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                elevation = FloatingActionButtonDefaults.elevation(20.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -48,7 +64,7 @@ fun ChatsScreen(
                 ChatUserRow(
                     user = user,
                     onClick = {
-                        onNavigateToChatDetail(user.id, user.name)
+                        onNavigateToChatDetail(user.uid, user.name)
                     }
                 )
                 HorizontalDivider(
@@ -74,7 +90,7 @@ fun ChatUserRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = user.profilePictureUrl,
+            model = user.profilePic,
             contentDescription = "Profile Picture",
             modifier = Modifier
                 .size(56.dp)
